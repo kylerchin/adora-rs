@@ -5,7 +5,11 @@ pub async fn genius_lyrics(ctx: Context<'_>, search: String) -> Result<(), Error
 
     let geniustoken = std::env::var("geniustoken").expect("Missing Genius API Token in env var `geniusapitoken`");
 
-    let response = make_genius_req(&ctx.data().reqwestclient, search.as_str(), geniustoken.as_str());
+    let response = make_genius_req(&ctx.data().reqwestclient, search.as_str(), geniustoken.as_str()).await;
+
+    if response.is_err() {
+        return Err(Box::new(response.unwrap_err()));
+    }
 
     Ok(())
 }
