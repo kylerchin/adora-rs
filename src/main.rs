@@ -3,11 +3,12 @@ mod translation;
 use poise::serenity_prelude as serenity;
 use translation::tr;
 
-struct Data { // User data, which is stored and accessible in all command invocations
-    translations: translation::Translations,
-}
-type Error = Box<dyn std::error::Error + Send + Sync>;
-type Context<'a> = poise::Context<'a, Data, Error>;
+mod genius;
+use genius::genius_lyrics;
+
+mod data_types;
+
+use data_types::{Data, Error, Context};
 
 #[poise::command(slash_command)]
 async fn age(
@@ -35,7 +36,7 @@ async fn lyrics(
     ctx: Context<'_>,
     search: String
 ) -> Result<(), Error> {
-    Ok(())
+    genius_lyrics(ctx, search)
 }
 
 #[tokio::main]
