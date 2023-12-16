@@ -6,6 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+actix-web = "4.4.0"
+actix_block_ai_crawling = "0.2.8"
+arguments = "0.7.2"
 fluent = "0.16.0"
 inline_colorization = "0.1.6"
 intl-memoizer = "0.5.1"
@@ -14,3 +17,7 @@ reqwest = "0.11.22"
 serenity = "0.12.0"
 tokio = {version = "1.35.0", features = ["full"]}
 tracing = "0.1.40"
+
+[[bin]]
+name = "adorahttpapi"
+path = "src/httpapi/main.rs"

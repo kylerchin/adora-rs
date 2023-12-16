@@ -11,6 +11,8 @@ pub async fn genius_lyrics(ctx: Context<'_>, search: String) -> Result<(), Error
         return Err(Box::new(response.unwrap_err()));
     }
 
+    let response = response.unwrap();
+
     Ok(())
 }
 
