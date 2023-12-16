@@ -36,7 +36,7 @@ async fn lyrics(
     ctx: Context<'_>,
     search: String
 ) -> Result<(), Error> {
-    genius_lyrics(ctx, search)
+    genius_lyrics(ctx, search).await
 }
 
 #[tokio::main]
