@@ -18,4 +18,4 @@ jobs:
     - name: Build
       run: cargo build --verbose --release
     - name: Build and Test
-      run: cargo test --verbose --release -- --nocapture
+      run: RUST_BACKTRACE=1 cargo test --verbose --release -- --nocapture
