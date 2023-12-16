@@ -1,10 +1,14 @@
-use poise::serenity_prelude as serenity;
+mod translation;
 
-struct Data {} // User data, which is stored and accessible in all command invocations
+use poise::serenity_prelude as serenity;
+use translation::tr;
+
+struct Data { // User data, which is stored and accessible in all command invocations
+    translations: translation::Translations,
+}
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
-/// Displays your or another user's account creation date
 #[poise::command(slash_command)]
 async fn age(
     ctx: Context<'_>,
@@ -16,7 +20,7 @@ async fn age(
     Ok(())
 }
 
-/// View bot latency
+
 #[poise::command(slash_command)]
 async fn ping(
     ctx: Context<'_>
@@ -29,9 +33,17 @@ async fn ping(
 
 #[tokio::main]
 async fn main() {
+    let mut commands = vec![age(),ping()];
+    let translations = translation::read_ftl().expect("failed to read translation files");
+    translation::apply_translations(&translations, &mut commands);
+
+    //shadow commands so it can't be changed anymore
+    let commands = commands;
+
+
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![age(),ping()],
+            commands: commands,
             ..Default::default()
         })
         .token(std::env::var("DISCORD_TOKEN").expect("missing DISCORD_TOKEN"))
@@ -39,7 +51,7 @@ async fn main() {
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-                Ok(Data {})
+                Ok(Data {translations})
             })
         });
 
