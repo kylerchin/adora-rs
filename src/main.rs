@@ -12,14 +12,13 @@ type Context<'a> = poise::Context<'a, Data, Error>;
 #[poise::command(slash_command)]
 async fn age(
     ctx: Context<'_>,
-    #[description = "Selected user"] user: Option<serenity::User>,
+    user: Option<serenity::User>,
 ) -> Result<(), Error> {
     let u = user.as_ref().unwrap_or_else(|| ctx.author());
     let response = format!("{}'s account was created at {}", u.name, u.created_at());
     ctx.say(response).await?;
     Ok(())
 }
-
 
 #[poise::command(slash_command)]
 async fn ping(
@@ -31,15 +30,22 @@ async fn ping(
     Ok(())
 }
 
+#[poise::command(slash_command)]
+async fn lyrics(
+    ctx: Context<'_>,
+    search: String
+) -> Result<(), Error> {
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() {
-    let mut commands = vec![age(),ping()];
+    let mut commands = vec![age(),ping(),lyrics()];
     let translations = translation::read_ftl().expect("failed to read translation files");
     translation::apply_translations(&translations, &mut commands);
 
     //shadow commands so it can't be changed anymore
     let commands = commands;
-
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
@@ -56,4 +62,18 @@ async fn main() {
         });
 
     framework.run().await.unwrap();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn languages() {
+        let mut commands = vec![age(),ping(),lyrics()];
+        let translations = translation::read_ftl().expect("failed to read translation files");
+        translation::apply_translations(&translations, &mut commands);
+
+        //shadow commands so it can't be changed anymore
+        let commands = commands;
+    }
 }
