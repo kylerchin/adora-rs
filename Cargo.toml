@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 fluent = "0.16.0"
+inline_colorization = "0.1.6"
 intl-memoizer = "0.5.1"
 poise = "0.5.7"
 serenity = "0.12.0"

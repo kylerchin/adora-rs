@@ -1,4 +1,5 @@
 //! Wraps the fluent API and provides easy to use functions and macros for translation
+use inline_colorization::*;
 
 //stolen from https://github.com/serenity-rs/poise/blob/next/examples/fluent_localization/translation.rs
 
@@ -40,7 +41,10 @@ pub fn format(
     let message = bundle.get_message(id)?;
     let pattern = match attr {
         Some(attribute) => message.get_attribute(attribute)?.value(),
-        None => message.value()?,
+        None => {
+            println!("{color_yellow}Could not find attr!: id: {color_red}{id}{color_yellow}, attr: {color_red}{:?}{color_reset}",attr);
+            message.value()?
+        },
     };
     let formatted = bundle.format_pattern(pattern, args, &mut vec![]);
     Some(formatted.into_owned())
@@ -120,6 +124,7 @@ pub fn apply_translations(
 
             for parameter in &mut command.parameters {
                 // Insert localized parameter name and description
+                println!("working on locale: {}", locale);
                 parameter.name_localizations.insert(
                     locale.clone(),
                     format(bundle, &command.name, Some(&parameter.name), None).unwrap(),
