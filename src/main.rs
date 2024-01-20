@@ -39,6 +39,16 @@ async fn lyrics(
     genius_lyrics(ctx, search).await
 }
 
+#[poise::command(slash_command)]
+async fn yt(
+    ctx: Context<'_>,
+    search: String,
+) -> Result<(), Error> {
+    let response = format!("You searched for {}.\n This function is being rewritten in Rust over the next few days. Check https://discord.gg/aYdFXm6JPe for more updates.",search);
+    ctx.say(response).await?;
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() {
     let mut commands = vec![age(),ping(),lyrics()];
