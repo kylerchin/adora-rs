@@ -12,7 +12,7 @@ arguments = "0.7.2"
 fluent = "0.16.0"
 inline_colorization = "0.1.6"
 intl-memoizer = "0.5.1"
-poise = "0.5.7"
+poise = "0.6.1"
 reqwest = {version = "0.11.22", features = ["gzip","brotli","rustls-tls"]}
 scylla = "0.10.1"
 serenity = "0.12.0"
