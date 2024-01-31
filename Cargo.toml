@@ -13,7 +13,7 @@ fluent = "0.16.0"
 inline_colorization = "0.1.6"
 intl-memoizer = "0.5.1"
 poise = "0.5.7"
-reqwest = {version = "0.11.22", features = ["gzip","brotli","rustls-tls"]}
+reqwest = {version = "0.11.24", features = ["gzip","brotli","rustls-tls"]}
 scylla = "0.10.1"
 serenity = "0.12.0"
 tokio = {version = "1.35.0", features = ["full"]}
