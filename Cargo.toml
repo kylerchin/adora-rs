@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-web = "4.4.0"
+actix-web = "4.5.1"
 actix_block_ai_crawling = "0.2.8"
 arguments = "0.7.2"
 fluent = "0.16.0"
