@@ -158,7 +158,10 @@ async fn send_yt_chart(video_id: String, ctx: Context<'_>) {
                         ctx.say(response).await; 
                     }
                 },
-                Err(_) => {
+                Err(err) => {
+
+                    println!("{:#?}", err);
+
                     let response = format!("Fetched but failed to deserialise response from Google servers.");
                     ctx.say(response).await;
                 }
