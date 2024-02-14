@@ -191,7 +191,7 @@ async fn yt(ctx: Context<'_>, search: String) -> Result<(), Error> {
                         match video_id {
                             Some(video_id) => {
                                 //lookup
-                                send_yt_chart(video_id, ctx);
+                                send_yt_chart(video_id, ctx).await;
                             }
                             None => {
                                 let response =
@@ -220,7 +220,7 @@ async fn yt(ctx: Context<'_>, search: String) -> Result<(), Error> {
 
 #[tokio::main]
 async fn main() {
-    let mut commands = vec![age(), ping(), lyrics()];
+    let mut commands = vec![age(), ping(), lyrics(), yt()];
     let translations = translation::read_ftl().expect("failed to read translation files");
     translation::apply_translations(&translations, &mut commands);
 
