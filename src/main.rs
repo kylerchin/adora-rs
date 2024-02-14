@@ -1,6 +1,6 @@
 mod translation;
 
-use poise::serenity_prelude::{self as serenity, Deserialize};
+use poise::serenity_prelude::{self as serenity};
 use translation::tr;
 
 mod genius;
@@ -149,7 +149,7 @@ async fn send_yt_chart(video_id: String, ctx: Context<'_>) {
             match parse_youtube {
                 Ok(parse_youtube) => {
                     if parse_youtube.items.len() > 0 {
-                    let item = parse_youtube.items[0];
+                    let item = &parse_youtube.items[0];
                     
                     let response = format!("***View Count***\nViews: {}\nComments: {}\nLikes: {:?}",item.snippet.statistics.view_count,item.snippet.statistics.comment_count, item.snippet.statistics.like_count);
                     ctx.say(response).await;
@@ -177,7 +177,7 @@ async fn yt(ctx: Context<'_>, search: String) -> Result<(), Error> {
     //ctx.say(response).await?;
     match search.trim().chars().count() {
         0 => {
-            format!("The correct format for Youtube Video Searches is `a!youtube [youtube url / search string]`");
+            let response = format!("The correct format for Youtube Video Searches is `a!youtube [youtube url / search string]`");
             ctx.say(response).await?;
         }
         _ => {
