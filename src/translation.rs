@@ -44,7 +44,7 @@ pub fn format(
         None => {
             println!("{color_yellow}Could not find attr!: id: {color_red}{id}{color_yellow}, attr: {color_red}{:?}{color_reset}",attr);
             message.value()?
-        },
+        }
     };
     let formatted = bundle.format_pattern(pattern, args, &mut vec![]);
     Some(formatted.into_owned())
