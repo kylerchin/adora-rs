@@ -3,7 +3,7 @@ mod translation;
 use poise::serenity_prelude::{self as serenity};
 use translation::tr;
 use serde_aux::prelude::{deserialize_option_number_from_string,deserialize_number_from_string};
-
+use serde::Deserializer;
 mod genius;
 use genius::genius_lyrics;
 
@@ -116,6 +116,16 @@ struct YouTubeResponseSnippet {
     tags: Vec<String>,
 }
 
+fn deserialize_u64_option<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let string = String::deserialize(deserializer)?;
+    match string.parse::<u64>() {
+        Ok(value) => Ok(Some(value)),
+        Err(_) => Ok(None), // Handle non-numeric strings as None
+    }
+}
 
 #[derive(Clone,Deserialize)]
 struct YouTubeResponseStatistics {
@@ -123,7 +133,7 @@ struct YouTubeResponseStatistics {
     view_count: u64,
     #[serde(rename = "commentCount",deserialize_with = "deserialize_number_from_string")]
     comment_count: u64,
-    #[serde(rename = "likeCount",deserialize_with = "deserialize_option_number_from_string")]
+    #[serde(rename = "likeCount",deserialize_with = "deserialize_u64_option")]
     like_count: Option<u64>
 }
 
