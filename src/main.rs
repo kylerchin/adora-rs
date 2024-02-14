@@ -118,11 +118,11 @@ struct YouTubeResponseSnippet {
 #[serde_as]
 #[derive(Clone,Deserialize)]
 struct YouTubeResponseStatistics {
-    #[serde(rename = "viewCount",as = "DisplayFromStr")]
+    #[serde(rename = "viewCount",deserialize_with = "deserialize_number_from_string")]
     view_count: u64,
-    #[serde(rename = "commentCount",as = "DisplayFromStr")]
+    #[serde(rename = "commentCount",deserialize_with = "deserialize_number_from_string")]
     comment_count: u64,
-    #[serde(rename = "likeCount",as = "DisplayFromStr")]
+    #[serde(rename = "likeCount",deserialize_with = "deserialize_number_from_string")]
     like_count: Option<u64>
 }
 
