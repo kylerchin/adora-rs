@@ -138,6 +138,7 @@ struct YouTubeResponseStatistics {
     view_count: u64,
     #[serde(rename = "commentCount",deserialize_with = "deserialize_number_from_string")]
     comment_count: u64,
+    #[serde(default)]
     #[serde(rename = "likeCount",deserialize_with = "deserialize_u64_option")]
     like_count: Option<u64>
 }
