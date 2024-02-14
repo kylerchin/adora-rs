@@ -83,7 +83,9 @@ struct YouTubeResponseItem {
     kind: String,
     etag: String,
     id: String,
-    snippet: YouTubeResponseSnippet
+    snippet: YouTubeResponseSnippet,
+    #[serde(rename = "statistics")]
+    statistics: YouTubeResponseStatistics
 }
 
 #[derive(Clone,Deserialize)]
@@ -110,8 +112,6 @@ struct YouTubeResponseSnippet {
     channel_id: String,
     title: String,
     thumbnails: YouTubeThumbnailList,
-    #[serde(rename = "statistics")]
-    statistics: YouTubeResponseStatistics,
     tags: Vec<String>,
 }
 
@@ -151,7 +151,7 @@ async fn send_yt_chart(video_id: String, ctx: Context<'_>) {
                     if parse_youtube.items.len() > 0 {
                     let item = &parse_youtube.items[0];
                     
-                    let response = format!("***View Count***\nViews: {}\nComments: {}\nLikes: {:?}",item.snippet.statistics.view_count,item.snippet.statistics.comment_count, item.snippet.statistics.like_count);
+                    let response = format!("***View Count***\nViews: {}\nComments: {}\nLikes: {:?}",item.statistics.view_count,item.statistics.comment_count, item.statistics.like_count);
                     ctx.say(response).await;
                     } else {
                         let response = format!("No data found!");
