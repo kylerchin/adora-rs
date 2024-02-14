@@ -116,7 +116,7 @@ struct YouTubeResponseSnippet {
     tags: Vec<String>,
 }
 
-#[serde_as]
+
 #[derive(Clone,Deserialize)]
 struct YouTubeResponseStatistics {
     #[serde(rename = "viewCount",deserialize_with = "deserialize_number_from_string")]
