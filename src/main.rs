@@ -2,6 +2,7 @@ mod translation;
 
 use poise::serenity_prelude::{self as serenity};
 use translation::tr;
+use serde_aux::prelude::{deserialize_option_number_from_string,deserialize_number_from_string};
 
 mod genius;
 use genius::genius_lyrics;
@@ -122,7 +123,7 @@ struct YouTubeResponseStatistics {
     view_count: u64,
     #[serde(rename = "commentCount",deserialize_with = "deserialize_number_from_string")]
     comment_count: u64,
-    #[serde(rename = "likeCount",deserialize_with = "deserialize_number_from_string")]
+    #[serde(rename = "likeCount",deserialize_with = "deserialize_option_number_from_string")]
     like_count: Option<u64>
 }
 
