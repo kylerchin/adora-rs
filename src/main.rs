@@ -115,13 +115,14 @@ struct YouTubeResponseSnippet {
     tags: Vec<String>,
 }
 
+#[serde_as]
 #[derive(Clone,Deserialize)]
 struct YouTubeResponseStatistics {
-    #[serde(rename = "viewCount")]
+    #[serde(rename = "viewCount",as = "DisplayFromStr")]
     view_count: u64,
-    #[serde(rename = "commentCount")]
+    #[serde(rename = "commentCount",as = "DisplayFromStr")]
     comment_count: u64,
-    #[serde(rename = "likeCount")]
+    #[serde(rename = "likeCount",as = "DisplayFromStr")]
     like_count: Option<u64>
 }
 
