@@ -120,10 +120,15 @@ fn deserialize_u64_option<'de, D>(deserializer: D) -> Result<Option<u64>, D::Err
 where
     D: Deserializer<'de>,
 {
-    let string = Option<String>::deserialize(deserializer)?;
-    match string.parse::<u64>() {
-        Ok(value) => Ok(Some(value)),
-        Err(_) => Ok(None), // Handle non-numeric strings as None
+    let string = Option::<String>::deserialize(deserializer)?;
+    match string {
+        Some(string) => {
+            match string.parse::<u64>() {
+                Ok(value) => Ok(Some(value)),
+                Err(_) => Ok(None), // Handle non-numeric strings as None
+            }
+        },
+        _ => Ok(None)
     }
 }
 
@@ -133,7 +138,7 @@ struct YouTubeResponseStatistics {
     view_count: u64,
     #[serde(rename = "commentCount",deserialize_with = "deserialize_number_from_string")]
     comment_count: u64,
-    #[serde(rename = "likeCount",deserialize_with = "deserialize_u64_option", default)]
+    #[serde(rename = "likeCount",deserialize_with = "deserialize_u64_option")]
     like_count: Option<u64>
 }
 
