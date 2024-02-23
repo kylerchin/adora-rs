@@ -1,13 +1,14 @@
 mod translation;
 
 use poise::serenity_prelude::{self as serenity};
-use translation::tr;
-use serde_aux::prelude::{deserialize_option_number_from_string,deserialize_number_from_string};
 use serde::Deserializer;
+use serde_aux::prelude::{deserialize_number_from_string, deserialize_option_number_from_string};
+use translation::tr;
 mod genius;
+use chrono::prelude::{DateTime, Utc};
 use genius::genius_lyrics;
-
 mod data_types;
+use std::time::{Duration, SystemTime};
 
 use data_types::{Context, Data, Error};
 
@@ -79,33 +80,40 @@ fn get_video_id_from_video_url(input: &url::Url) -> Option<String> {
     None
 }
 
-#[derive(Clone,Deserialize)]
+#[derive(Clone, Deserialize)]
 struct YouTubeResponseItem {
     kind: String,
     etag: String,
     id: String,
     snippet: YouTubeResponseSnippet,
     #[serde(rename = "statistics")]
-    statistics: YouTubeResponseStatistics
+    statistics: YouTubeResponseStatistics,
 }
 
-#[derive(Clone,Deserialize)]
+#[derive(Clone, Deserialize)]
 struct YouTubeThumbnailList {
     default: Option<ThumbnailItem>,
     medium: Option<ThumbnailItem>,
     high: Option<ThumbnailItem>,
     standard: Option<ThumbnailItem>,
-    maxres: Option<ThumbnailItem>
+    maxres: Option<ThumbnailItem>,
 }
 
-#[derive(Clone,Deserialize)]
+fn thumbnail_option_to_empty_url(x: Option<&ThumbnailItem>) -> String {
+    match x {
+        Some(x) => x.url.clone(),
+        None => String::from(""),
+    }
+}
+
+#[derive(Clone, Deserialize)]
 struct ThumbnailItem {
     url: String,
     width: u16,
-    height: u16
+    height: u16,
 }
 
-#[derive(Clone,Deserialize)]
+#[derive(Clone, Deserialize)]
 struct YouTubeResponseSnippet {
     #[serde(rename = "publishedAt")]
     published_at: String,
@@ -127,31 +135,47 @@ where
                 Ok(value) => Ok(Some(value)),
                 Err(_) => Ok(None), // Handle non-numeric strings as None
             }
-        },
-        _ => Ok(None)
+        }
+        _ => Ok(None),
     }
 }
 
-#[derive(Clone,Deserialize)]
+#[derive(Clone, Deserialize)]
 struct YouTubeResponseStatistics {
-    #[serde(rename = "viewCount",deserialize_with = "deserialize_number_from_string")]
+    #[serde(
+        rename = "viewCount",
+        deserialize_with = "deserialize_number_from_string"
+    )]
     view_count: u64,
-    #[serde(rename = "commentCount",deserialize_with = "deserialize_number_from_string")]
+    #[serde(
+        rename = "commentCount",
+        deserialize_with = "deserialize_number_from_string"
+    )]
     comment_count: u64,
     #[serde(default)]
-    #[serde(rename = "likeCount",deserialize_with = "deserialize_u64_option")]
-    like_count: Option<u64>
+    #[serde(rename = "likeCount", deserialize_with = "deserialize_u64_option")]
+    like_count: Option<u64>,
 }
 
-#[derive(Clone,Deserialize)]
+#[derive(Clone, Deserialize)]
 struct YouTubeResponse {
     kind: String,
     etag: String,
-    items: Vec<YouTubeResponseItem>
+    items: Vec<YouTubeResponseItem>,
+}
+
+fn iso8601(st: &SystemTime) -> String {
+    let dt: DateTime<Utc> = st.clone().into();
+    format!("{}", dt.format("%+"))
+    // formats like "2001-07-08T00:34:60.026490+09:30"
+}
+
+fn iso8601_now() -> String {
+    let now = SystemTime::now();
+    iso8601(&now)
 }
 
 async fn send_yt_chart(video_id: String, ctx: Context<'_>) {
-
     let api_key = std::env::var("YOUTUBE_API").expect("missing YOUTUBE_API");
 
     let path_yt = format!("https://youtube.googleapis.com/youtube/v3/videos?part=snippet,statistics,status,liveStreamingDetails&id={video_id}&key={api_key}");
@@ -167,20 +191,30 @@ async fn send_yt_chart(video_id: String, ctx: Context<'_>) {
             match parse_youtube {
                 Ok(parse_youtube) => {
                     if parse_youtube.items.len() > 0 {
-                    let item = &parse_youtube.items[0];
-                    
-                    let response = format!("***View Count***\nViews: {}\nComments: {}\nLikes: {:?}",item.statistics.view_count,item.statistics.comment_count, item.statistics.like_count);
-                    ctx.say(response).await;
+                        let item = &parse_youtube.items[0];
+
+                        let iso_fmt = iso8601_now();
+
+                        let response = format!(
+                            "***{}***\n{}\nViews: {}\nComments: {}\nLikes: {:?}\n{}",
+                            item.snippet.title,
+                            iso_fmt,
+                            item.statistics.view_count,
+                            item.statistics.comment_count,
+                            item.statistics.like_count,
+                            thumbnail_option_to_empty_url(item.snippet.thumbnails.maxres.as_ref())
+                        );
+                        ctx.say(response).await;
                     } else {
                         let response = format!("No data found!");
-                        ctx.say(response).await; 
+                        ctx.say(response).await;
                     }
-                },
+                }
                 Err(err) => {
-
                     println!("{:#?}", err);
 
-                    let response = format!("Fetched but failed to deserialise response from Google servers.");
+                    let response =
+                        format!("Fetched but failed to deserialise response from Google servers.");
                     ctx.say(response).await;
                 }
             }

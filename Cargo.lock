@@ -215,10 +215,12 @@ dependencies = [
  "actix-web",
  "actix_block_ai_crawling",
  "arguments",
+ "chrono",
  "fluent",
  "google-youtube3",
  "inline_colorization",
  "intl-memoizer",
+ "iso8601-timestamp",
  "poise",
  "reqwest",
  "scylla",
@@ -417,7 +419,7 @@ version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71"
 dependencies = [
- "generic-array",
+ "generic-array 0.14.7",
 ]
 
 [[package]]
@@ -529,8 +531,10 @@ checksum = "5bc015644b92d5890fab7489e49d21f879d5c990186827d42ec511919404f38b"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
+ "js-sys",
  "num-traits",
  "serde",
+ "wasm-bindgen",
  "windows-targets 0.52.0",
 ]
 
@@ -617,7 +621,7 @@ version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1bfb12502f3fc46cca1bb51ac28df9d618d813cdc3d2f25b9fe775a34af26bb3"
 dependencies = [
- "generic-array",
+ "generic-array 0.14.7",
  "typenum",
 ]
 
@@ -1005,6 +1009,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "generic-array"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe739944a5406424e080edccb6add95685130b9f160d5407c639c7df0c5836b0"
+dependencies = [
+ "typenum",
+]
+
+[[package]]
 name = "getrandom"
 version = "0.2.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1323,6 +1336,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37209be0ad225457e63814401415e748e2453a5297f9b637338f5fb8afa4ec00"
 dependencies = [
  "ipnet",
+]
+
+[[package]]
+name = "iso8601-timestamp"
+version = "0.2.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "24d4e5d712dd664b11e778d1cfc06c79ba2700d6bc1771e44fb7b6a4656b487d"
+dependencies = [
+ "generic-array 1.0.0",
+ "serde",
+ "time",
 ]
 
 [[package]]
